@@ -41,9 +41,16 @@ public class FileUtils {
         final ArrayList<String> mimes = new ArrayList<>();
 
         for (int i = 0; i < allowedExtensions.size(); i++) {
+            final String allowedExtension = allowedExtensions.get(i);
             final String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(allowedExtensions.get(i));
             if (mime == null) {
-                Log.w(TAG, "Custom file type " + allowedExtensions.get(i) + " is unsupported and will be ignored.");
+                if (allowedExtension.equals("bin")) {
+                    final String octetStreamMimeType = "application/octet-stream";
+                    Log.w(TAG, "Mime type from extension " + allowedExtension + " was not recognized, " + octetStreamMimeType + " will be used instead.");
+                    mimes.add(octetStreamMimeType);
+                    continue;
+                }
+                Log.w(TAG, "Custom file type " + allowedExtension + " is unsupported and will be ignored.");
                 continue;
             }
 
